@@ -20,8 +20,9 @@ public class Unit : MonoBehaviour
         rigid = GetComponent<Rigidbody>();
     }
 
-    public IEnumerator OnDamage()
+    public IEnumerator OnDamage(int getDmg)
     {
+        hp -= getDmg;
         yield return null;
     }
 

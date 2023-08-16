@@ -16,4 +16,12 @@ public class Player : Unit
 
         transform.position += new Vector3(hAxis, 0, vAxis) * speed * Time.deltaTime;
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.tag == "Enemy")
+        {
+            OnDamage(1);
+        }
+    }
 }
