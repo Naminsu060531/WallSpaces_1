@@ -11,7 +11,9 @@ public class Player : Unit
     Vector3 dragStartPos;
     public Transform firePos;
     public GameObject forceObj;
-    bool isDrag;
+    public bool isDrag;
+
+    public float forceDelay, forceDelayMax;
 
     private void Awake()
     {
@@ -25,6 +27,7 @@ public class Player : Unit
         Move();
         Clamp();
         DragAndMove();
+        Force();
     }
 
     public void Move()
@@ -70,15 +73,43 @@ public class Player : Unit
                 Vector3 dir = dragStartPos - hit.point;
                 dir.y = 0;
                 rigid.AddForce(dir * (speed / 2), ForceMode.Impulse);
+                isDrag = false;
             }
         }
+    }
+
+    public void Force()
+    {
+        forceDelay += Time.deltaTime;
+
+        if (Input.GetMouseButtonDown(1) && forceDelay >= forceDelayMax)
+        {
+            StartCoroutine(ForceCo());
+        }
+
+        if(forceObj.activeInHierarchy)
+        {
+            forceObj.transform.position = transform.position;
+        }
+    }
+
+    public IEnumerator ForceCo()
+    {
+        if (!forceObj.activeInHierarchy)
+        {
+            forceObj.SetActive(true);
+        }
+        yield return new WaitForSeconds(5f);
+        forceObj.SetActive(false);
+        forceDelay = 0;
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if(other.tag == "Enemy")
         {
-            OnDamage(1);
+            hp -= 1;
+            UIManager.instance.setText();
         }
     }
 }

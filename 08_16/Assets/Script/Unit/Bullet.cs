@@ -36,5 +36,6 @@ public class Bullet : Unit
     void Unset()
     {
         gameObject.SetActive(false);
+        transform.position = startPos;
     }
 }

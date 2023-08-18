@@ -18,8 +18,11 @@ public class BulletManager : MonoBehaviour
         shotDelay += Time.deltaTime;
         if(shotDelay >= shotDelayMax)
         {
-            BulletPool.GetObj().Init();
-            shotDelay = 0;
+            if (!Player.instance.isDrag)
+            {
+                BulletPool.GetObj().Init();
+                shotDelay = 0;
+            }
         }
     }
 }
