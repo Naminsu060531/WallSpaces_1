@@ -11,10 +11,18 @@ public class Bullet : Unit
         rigid = GetComponent<Rigidbody>();
     }
 
+    private void Start()
+    {
+        speed += PlayerPrefs.GetInt("SPEED_Lvl");
+    }
+
     private void Update()
     {
-        startPos = Player.instance.firePos.position;
-        Move();
+        if(!GameManager.instance.gameOverValue)
+        {
+            startPos = Player.instance.firePos.position;
+            Move();
+        }
     }
 
     void Move()

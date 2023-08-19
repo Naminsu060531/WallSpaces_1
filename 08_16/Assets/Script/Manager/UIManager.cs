@@ -7,7 +7,8 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
 
-    public Text HP_UI, Speed_UI, Damage_UI, Score_UI, Gold_UI, HPLvl_UI, SpeedLvl_UI, AttackLvl_UI;
+    public Text HP_UI, SPEED_UI, ATK_UI, HP_LEVEL_UI, SPD_LEVEL_UI, ATK_LEVEL_UI, SCORE_UI, GOLD_UI;
+    public GameObject gameOverScreen;
 
     private void Awake()
     {
@@ -16,18 +17,35 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        setText();
+        playerStatsSet();
     }
 
-    public void setText()
+    public void getScore(int score)
     {
-        HP_UI.text = "HP : " + Player.instance.hp.ToString();
-        Speed_UI.text = "Speed : " + Player.instance.speed.ToString();
-        Damage_UI.text = "Attack : " + Player.instance.dmg.ToString();
-        Score_UI.text = "Score : " + PlayerPrefs.GetInt("Score");
-        Gold_UI.text = "Gold : " + PlayerPrefs.GetInt("Gold");
-        HPLvl_UI.text = "Lvl : " + PlayerPrefs.GetInt("HP_Level");
-        SpeedLvl_UI.text = "Lvl : " + PlayerPrefs.GetInt("SpeedLvl_UI");
-        AttackLvl_UI.text = "Lvl : " + PlayerPrefs.GetInt("Attack_Level");
+        int addscore = score + PlayerPrefs.GetInt("Score");
+        PlayerPrefs.SetInt("Score", addscore);
+        playerStatsSet();
+        Debug.Log("GS");
     }
+
+    public void getGold(int gold)
+    {
+        int addgold = gold + PlayerPrefs.GetInt("hasGold");
+        PlayerPrefs.SetInt("hasGold", addgold);
+        playerStatsSet();
+        Debug.Log("GG");
+    }
+
+    public void playerStatsSet()
+    {
+        HP_UI.text = "HP : " + Player.instance.hp;
+        SPEED_UI.text = "Speed : " + Player.instance.speed;
+        ATK_UI.text = "ATK : " + PlayerPrefs.GetInt("ATTACK_Lvl");
+        HP_LEVEL_UI.text = "HP_Lvl : " + PlayerPrefs.GetInt("HP_Lvl");
+        SPD_LEVEL_UI.text = "Speed_Lvl : " + PlayerPrefs.GetInt("SPEED_Lvl");
+        ATK_LEVEL_UI.text = "Attack_Lvl : " + PlayerPrefs.GetInt("ATTACK_Lvl");
+        GOLD_UI.text = "Gold : " + PlayerPrefs.GetInt("hasGold");
+        SCORE_UI.text = "Score : " + PlayerPrefs.GetInt("Score");
+    }
+
 }

@@ -21,17 +21,19 @@ public class Enemy : Unit
 
     private void Update()
     {
-        if(rank != Rank.Boss)
+        if(!GameManager.instance.gameOverValue)
         {
-            attackDelay += Time.deltaTime;
-            if(attackDelay >= attackDelayMax)
+            if (rank != Rank.Boss)
             {
-                StartCoroutine(AttackCo());
+                attackDelay += Time.deltaTime;
+                if (attackDelay >= attackDelayMax)
+                {
+                    StartCoroutine(AttackCo());
+                }
+
+                UpAndDown();
             }
-
-            UpAndDown();
         }
-
     }
     void UpAndDown()
     {
@@ -148,7 +150,7 @@ public class Enemy : Unit
 
             if(bullet.target == Target.enemy)
             {
-                StartCoroutine(OnDamage(bullet.dmg));
+                StartCoroutine(OnDamage(1));
             }
         }
 
@@ -174,17 +176,19 @@ public class Enemy : Unit
 
     public IEnumerator OnDamage(int dmg)
     {
+        hp -= dmg;
+
+        yield return new WaitForSeconds(.1f);
+
         if(rank == Rank.Boss)
         {
             BossSpawnManager.instance.BossHealth = hp;
         }
 
-        hp -= dmg;
-
         if(hp <= 0)
         {
-            /*DataManager.instance.addGold(dropGold);
-            DataManager.instance.addScore(getScore);*/
+            UIManager.instance.getGold(dropGold);
+            UIManager.instance.getScore(getScore);
 
             if (rank == Rank.Boss)
             {
@@ -195,14 +199,11 @@ public class Enemy : Unit
             gameObject.SetActive(false);    
         }
 
-        UIManager.instance.setText();
-
-        yield return null;
     }
 
     public IEnumerator OnReact(Vector3 react)
     {
-        rigid.AddForce(react * 2, ForceMode.Impulse);
+        rigid.AddForce(react * 2.5f, ForceMode.Impulse);
         yield return new WaitForSeconds(.5f);
     }
 

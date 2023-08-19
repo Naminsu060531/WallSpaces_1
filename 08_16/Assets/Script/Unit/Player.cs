@@ -22,6 +22,11 @@ public class Player : Unit
         cam = Camera.main.GetComponent<Camera>();
     }
 
+    private void Start()
+    {
+        playerSet();
+    }
+
     private void Update()
     {
         Move();
@@ -73,9 +78,14 @@ public class Player : Unit
                 Vector3 dir = dragStartPos - hit.point;
                 dir.y = 0;
                 rigid.AddForce(dir * (speed / 2), ForceMode.Impulse);
-                isDrag = false;
+                Invoke("unSet", 1f);
             }
         }
+    }
+
+    public void unSet()
+    {
+        isDrag = false;
     }
 
     public void Force()
@@ -93,6 +103,13 @@ public class Player : Unit
         }
     }
 
+    public void playerSet()
+    {
+        hp = 10 + PlayerPrefs.GetInt("HP_Lvl");
+        speed = 10 + PlayerPrefs.GetInt("SPEED_Lvl");
+        forceDelayMax -= PlayerPrefs.GetInt("ATTACK_Lvl");
+    }
+
     public IEnumerator ForceCo()
     {
         if (!forceObj.activeInHierarchy)
@@ -108,8 +125,16 @@ public class Player : Unit
     {
         if(other.tag == "Enemy")
         {
-            hp -= 1;
-            UIManager.instance.setText();
+            if (hp <= 0)
+            {
+                gameObject.SetActive(false);
+                GameManager.instance.CheckPlayer();
+            }
+
+            if(!isDrag)
+                hp -= 1;
+
+            UIManager.instance.playerStatsSet();
         }
     }
 }

@@ -14,5 +14,6 @@ public class Boss : Enemy
     {
         BossSpawnManager.instance.BossMaxHealth = hp;
         BossSpawnManager.instance.BossHealth = BossSpawnManager.instance.BossMaxHealth;
+        isSee = true;
     }
 }
